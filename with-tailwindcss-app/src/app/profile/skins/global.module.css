@@ -1,0 +1,67 @@
+.skins
+  {
+    background: rgba(5, 10, 39, 1);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    z-index: auto; /* Lower the z-index value */
+  }
+  
+  .skins-container
+  {
+    display: grid;
+    height: 80%;
+    width: 80%;
+    border-radius: 2rem;
+    /* background-color: var(--glass); */
+    background: var(--linear-blue_purble, linear-gradient(170deg, rgba(255, 255, 255, 0.00) -50.22%, #040924 -9.3%, #111534 -1.17%, rgba(68, 71, 111, 0.96) 83.26%, rgba(154, 155, 211, 0.90) 136.85%));
+    overflow: hidden;
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-template-columns: 2rem 25rem auto 40rem 2rem;
+    grid-template-rows: repeat(3, 1fr);
+    z-index: auto;
+  }
+  
+  @media (min-width: 1300px) and (max-width: 1900px) {
+    .AppGlass {
+      grid-template-columns: 2rem 25rem auto 22rem 2rem;
+    }
+  }
+  
+  @media screen and (max-width: 1300px) {
+    .AppGlass {
+      grid-template-columns: 2rem 22rem auto;
+    }
+    
+  }
+  
+  .AppGlass-header {
+    grid-row: 1;
+    grid-column: 1 / 4;
+    background-color: #07284f;
+  }
+
+  .wallet {
+    color: aliceblue;
+    position: absolute;
+    top: 21vh;
+    right: 23vw;
+    gap: 0.5rem;
+    /* padding: 0.625px; */
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .wallet svg {
+    width: 3.125rem;
+    height: 3.125rem;
+  }
+  
+  .wallet span {
+    font-size: 20px;
+    font-weight: bold;
+}

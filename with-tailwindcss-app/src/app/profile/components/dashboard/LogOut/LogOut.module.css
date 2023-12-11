@@ -1,0 +1,33 @@
+.LogOut
+{
+    position: relative;
+    top: 0;
+    right: 0;
+    /* margin: 1rem; */
+    padding: 1rem;
+    font-size: 1.5rem;
+    gap: 0.9rem;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.LogOut:hover
+{
+    border-radius: 1rem;
+    transition: all 0.3s ease-in-out;
+    background: rgba(52, 65, 139, 0.55);
+}
+
+.logout-text
+{
+    font-size: 1.5rem;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    gap: 0.3rem;
+}

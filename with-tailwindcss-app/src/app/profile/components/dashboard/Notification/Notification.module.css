@@ -1,0 +1,13 @@
+.notification
+{
+    position: absolute;
+    top: 2.5vh;
+    right: 2vw;
+}
+
+.notification svg
+{
+    color: aliceblue;
+    width: 4rem;
+    height: 3rem;
+}

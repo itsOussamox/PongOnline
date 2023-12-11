@@ -1,0 +1,40 @@
+{
+  "name": "with-tailwindcss-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@iconscout/react-unicons": "^2.0.2",
+    "@types/circular-json": "^0.4.0",
+    "@types/matter-js": "^0.19.5",
+    "@types/socket.io-client": "^3.0.0",
+    "circular-json": "^0.5.9",
+    "echarts": "^5.4.3",
+    "echarts-for-react": "^3.0.2",
+    "js-cookie": "^3.0.5",
+    "matter-js": "^0.19.0",
+    "next": "^14.0.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.12.0",
+    "react-router-dom": "^6.20.1",
+    "socket.io-client": "^4.7.2"
+  },
+  "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10",
+    "eslint": "^8",
+    "eslint-config-next": "13.5.5",
+    "postcss": "^8",
+    "tailwindcss": "^3",
+    "typescript": "^5"
+  }
+}

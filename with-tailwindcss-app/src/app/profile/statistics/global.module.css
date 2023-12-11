@@ -1,0 +1,15 @@
+.statistics
+{
+    background: rgba(5, 10, 39, 1);
+    height: 100vh;
+    display: flex;
+}
+
+.left-panel {
+    flex: 0 0 65vw; /* Set width to 65% of viewport width */
+    /* margin: 5rem 0 0 0; */
+  }
+  
+  .right-panel {
+    flex: 1; /* Takes remaining space */
+}

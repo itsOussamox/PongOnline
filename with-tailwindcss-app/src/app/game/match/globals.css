@@ -1,0 +1,26 @@
+body {
+    background: #050A27;
+  }
+#game {
+  /* center the canvas */
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  display: block;
+  margin: auto;
+  width: 50%;
+  height: 50%;
+  border: 1px solid #333;
+}
+
+#MatchScene {
+  /* make it scale with the window */
+
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  display: inline-block;
+  margin: auto;
+  width: 100%;
+  border: 1px solid #0b1b3f;
+}

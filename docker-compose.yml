@@ -1,0 +1,18 @@
+version: '3.1'
+
+services:
+  postgres:
+    image: postgres:latest
+    # restart: always
+    container_name: my_postgres_container
+    ports:
+      - "5433:5432"  
+    environment:
+      POSTGRES_USER: snouae
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: db
+#     volumes:
+#       - my_postgres_data_auth:/var/lib/postgresql/data  
+
+# volumes:
+#   my_postgres_data_auth:

@@ -1,0 +1,44 @@
+.SkinComp {
+    transition: width 2s ease-in-out cubic-bezier(0, 1.22, 0.66, 1.39),
+      border-radius 2s ease-in-out,
+      background 2s ease-in-out,
+      box-shadow 2s ease-in-out;
+    transition-property: all;
+    border: none;
+    cursor: pointer;
+    width: 14vw;
+    height: 42vh;
+    border-radius: 10px;
+    background: rgba(30, 35, 61, 0.7);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    margin: 0 1.875vw 0 1.875vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.875vw 0 0.875vw 0;
+    position: relative;
+    overflow: hidden;
+    margin: 3rem;
+  }
+  
+  .SkinComp:hover {
+    width: 19%;
+    height: 55vh;
+    transform: scaleX(1.2);
+    transition: width 2s ease-in-out cubic-bezier(0, 1.22, 0.66, 1.39),
+    border-radius 2s ease-in-out,
+    background 2s ease-in-out,
+    box-shadow 2s ease-in-out;
+    transition-property: all;
+  }
+  
+  .skin-name {
+    color: white;
+  }
+  
+  .wallet-value {
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+  }

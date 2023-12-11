@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+    height: 1000px;
+    background-color: #040924;
+    /* min-height: 850px; */
+}
+.Background{
+    background-color: #050A27;
+}
+.mainBackground{
+    /* background-color: ; */
+    background: var(--linear-blue_purble_, linear-gradient(170deg, rgba(255, 255, 255, 0.00) -50.22%, #040924 -9.3%, #111534 -1.17%, rgba(68, 71, 111, 0.96) 83.26%, rgba(154, 155, 211, 0.90) 136.85%));
+}
+
+.secondaryBackground{
+    background: rgba(154, 155, 211, 0.20);
+}
+
+.buttonColor{
+    background-color: #FEFFFF;
+}
+
+.textColor{
+    color: #FEFFFF;
+}
+/* 
+.secondaryTextColor{
+
+} */

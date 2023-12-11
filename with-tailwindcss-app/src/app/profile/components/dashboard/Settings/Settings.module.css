@@ -1,0 +1,89 @@
+.settings {
+    color: aliceblue;
+    position: relative;
+    height: 5vh;
+    width: 9vw;
+    top: 18vh;
+    left: 2vw;
+    margin: 30px;
+    gap: 1rem;
+    padding: 10px;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.settings:hover
+{
+  transition: all 0.3s ease-in-out;
+  background: rgba(5, 10, 39, 0.55);
+}
+
+.settings:active
+{
+  background: rgba(5, 10, 39, 0.55);
+  transition: height 0.3s ease-in-out; /* Smooth transition */
+}
+
+.settings-container
+{
+    position: relative;
+    top: 0vh;
+    left: 0vw;
+    gap: 0.06rem;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: height 0.2s ease-in-out;
+    overflow: hidden;
+}
+
+.openBar-container {
+    position: relative;
+    top: 0vh;
+    left: 0vw;
+    gap: 0.06rem;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: height 0.2s ease-in-out;
+    overflow: hidden;
+}
+
+.openBar-container.open {
+    height: 200px;
+    transition: height 0.2s ease-in-out;
+
+}
+  
+  .settings span {
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 20px;
+  }
+  .settings svg {
+    width: 40px;
+    height: 40px;
+  }
+
+
+  .wrapper {
+    position: relative;
+}
+
+.OpenedBar {
+    position: absolute;
+    top: -10.26vh;
+    left: 0;
+    width: 9vw;
+    height: 13rem;
+    background: rgba(5, 10, 39, 0.55);
+    transition: height 0.3s ease-in-out; /* Smooth transition */
+    border-radius: 1rem;
+}

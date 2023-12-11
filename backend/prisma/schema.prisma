@@ -1,0 +1,174 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id String @id @unique @default(uuid())
+  creatorOf Channel[] @relation("channelCreator")
+  email String @unique
+  hash String
+  // admineOf String[]
+  friends User[] @relation("friendsList")
+  friendOf User[] @relation("friendsList")
+  blockedUsers User[] @relation("blocked")
+  blockedByUsers User[] @relation("blocked")
+  profilePic String
+  username String @unique
+  TwoFactSecret String?
+  title String
+  wallet Int?
+
+  userDMs Conversation[]
+  gameRecords GameRecord[]
+  channels UserChannel[]
+  channelBaned Channel[] @relation("channelBaned")
+
+  notifications Notification[]
+
+  memberConv Member[]
+
+  mutedUser Muted? @relation(fields: [mutedId], references: [id])
+  mutedId String? @unique
+
+  userMessages Message[]
+}
+
+model GameRecord{
+  id String @id @default(uuid())
+  userRecord User @relation(fields: [recordId], references: [id])
+  recordId String @unique
+}
+
+model Message{
+  id String @id @default(uuid())
+
+  sender User @relation(fields: [userId], references: [id])
+  userId String
+
+  message String
+
+  createdAt DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String
+}
+
+model Conversation{
+  id String @id @default(uuid())
+
+  type String
+  members Member[]
+  users User[]
+  createdAt DateTime @default(now())
+  messages Message[]
+
+  channel Channel? @relation(fields: [channelId], references: [id])
+  channelId String? @unique
+
+}
+
+model Member{
+  id Int @id @default(autoincrement())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String
+
+  user User @relation(fields: [userId], references: [id])
+  userId String
+}
+
+model Notification{
+  id Int @id @default(autoincrement())
+
+  type NOTIF_TYPE
+  title String
+  discription String
+
+  user User @relation(fields: [userId], references: [id])
+  userId String
+}
+
+enum NOTIF_TYPE{
+  friendReq
+  joinChannelReq
+  acceptChannelReq
+  acceptWantToJoin
+}
+// model Messages{
+//   id	String @id() @default(uuid())
+
+// }
+
+model Channel{
+  id String @id() @default(uuid())
+  channelName String
+  creator User @relation("channelCreator",fields: [creatorId], references: [id])
+  creatorId String
+  channelType String @default("public")
+  hash String?
+  members UserChannel[]
+  conversation Conversation?
+  // admins User[] @relation("channelAdmin")
+  banedUsers User[] @relation("channelBaned")
+  mutedUsers Muted[]
+}
+
+
+
+model UserChannel{
+
+  isAdmin Boolean @default(false)
+
+  user User @relation(fields: [userId], references: [id])
+  userId String
+
+  channel Channel @relation(fields: [channelId], references: [id])
+  channelId String
+
+  @@id([userId, channelId])
+}
+
+model Muted{
+  id String @id() @default(uuid())
+  timeToEnd DateTime
+  mutedUser User?
+
+  mutedChannel Channel @relation(fields: [mutedId], references: [id])
+  mutedId String
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,10 @@
+.Table
+{
+    width: 74vw;
+    height:  55vh;
+    margin: 10px 50px;
+    position: fixed;
+    left: 10vw;
+    top: 27vh;
+    display: flex;
+}

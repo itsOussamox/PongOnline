@@ -1,0 +1,39 @@
+.statistics
+{
+    background: rgba(5, 10, 39, 1);
+    height: 33vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    z-index: auto; /* Lower the z-index value */
+}
+
+.container
+{
+    background: linear-gradient(169.75deg, rgba(255, 255, 255, 0) -50.22%, #040924 -9.3%, #111534 -1.17%, rgba(68, 71, 111, 0.957018) 83.26%, rgba(154, 155, 211, 0.9) 136.85%);
+    border-radius: 15px;
+    position: relative;
+    top: 2vh;
+    height: 79%;
+    width: 90%;
+    /* margin: 0 auto; */
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
+}
+
+.chart {
+    width: 60%;
+    display: flex;
+    position: absolute;
+    right: 0;
+    height: 700px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .pie {
+    width: 30%;
+    height: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }

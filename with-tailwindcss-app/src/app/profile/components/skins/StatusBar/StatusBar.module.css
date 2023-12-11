@@ -1,0 +1,77 @@
+.StatusBar
+{
+  background: rgba(154, 155, 211, 0.1);
+  position: absolute;
+  top: 11vh;
+  left: 28vw;
+  height: 3.5rem;
+  width: 23rem;
+  font-family: "Poppins", sans-serif;
+  font-size: 2rem;
+  font-weight: 400;
+  position: relative;
+  border-radius: 0.5rem;
+}
+
+
+.ul-style
+{
+  width: 100%;
+  list-style-type: none;
+  list-style: none;
+  position: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.navli
+{
+  position: -webkit-sticky;
+}
+
+.nav-a
+{
+  text-decoration: none;
+  color: white;
+  font-size: 1.4rem;
+  font-weight: 800;
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.nav-a:hover
+{
+  background: rgba(154, 155, 211, 0.1);
+}
+
+.sidebar
+{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;;
+  width: 250px;
+  z-index: 999; /* Stay on top */
+  background: rgba(154, 155, 211, 0.1);
+  backdrop-filter: blur(10px);
+  overflow-x: hidden; /* Disable horizontal scroll */
+  box-shadow: -10px 0px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.sidebar .navli
+{
+  width: 100%;
+}
+
+.sidebar .nav-a
+{
+  width: 100%;
+  padding: 1rem 0.5rem;
+  text-align: center;
+}

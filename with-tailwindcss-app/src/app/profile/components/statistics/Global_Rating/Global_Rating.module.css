@@ -1,0 +1,115 @@
+.global-rating
+{
+    background: linear-gradient(169.75deg, rgba(255, 255, 255, 0) -50.22%, #040924 -9.3%, #111534 -1.17%, rgba(68, 71, 111, 0.957018) 83.26%, rgba(154, 155, 211, 0.9) 136.85%);
+    border-radius: 15px;
+    height: 88.8vh;
+    width: 70%;
+    display: flex;
+
+    /* justify-content: center;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    z-index: auto; */
+    position: relative;
+    top: 5.2vh;
+    overflow: auto;
+}
+
+.global-rating::-webkit-scrollbar {
+    display: none;
+}
+
+.global-rating-title
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 2rem;
+    color: white;
+    font-weight: 600;
+    margin-left: 2vw;
+    margin-top: 2vh;
+}
+
+.RatingList
+{
+    position: relative;
+    top: 6vh;
+    left: 0.7vw;
+
+}
+
+.rating-container
+{
+    background: rgba(125, 126, 154, 0.2);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    /* width: 40vw; */
+    width: 22vw;
+    /* padding: 10px 0px; */
+    box-sizing: border-box;
+    height: 7vh;
+    border-bottom: 1px solid rgba(154, 155, 211, 0.2);
+    margin: 30px 10px;
+}
+
+.player-profile
+{
+    width: 5.7rem;
+    height: 5.7rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50% 50%;
+}
+
+/* .player-profile img {
+    height: -webkit-fill-available;
+} */
+
+.rounded-lg {
+    border-radius: 15px 0 0 15px; /* Adjust the value as needed */
+    /* Other styles for the image */
+}
+
+.player-name
+{
+    font-size: 1.5rem;
+    color: white;
+    font-weight: 600;
+    margin-left: 5vw;
+    margin-top: -5vh;
+}
+
+.player-title
+{
+    color: white;
+    font-family: Poppins;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 27px;
+    letter-spacing: 0em;
+    text-align: left;    
+    margin-left: 5vw;
+}
+
+.player-rating
+{
+    color: white;
+    font-family: Poppins;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 30px;
+    letter-spacing: 0em;
+    text-align: left;
+    margin-left: 8vw;
+}
+
+.global-rating-icon
+{
+    position: absolute;
+    left: 18vw;
+    top: 0.5vh;
+    cursor: pointer;
+}

@@ -1,0 +1,47 @@
+.statistics
+{
+    grid-row-start: 3;
+    grid-row-end: 4;
+    grid-column-start: 3;
+    grid-column-end: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2rem;
+    /* padding-bottom: 2rem; */
+    transition: all 300ms ease;
+}
+
+.container
+{
+    background: linear-gradient(169.75deg, rgba(255, 255, 255, 0) -50.22%, #040924 -9.3%, #111534 -1.17%, rgba(68, 71, 111, 0.957018) 83.26%, rgba(154, 155, 211, 0.9) 136.85%);
+    padding-top: 20px;
+    padding-bottom: 0px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    height: 90%;
+    width: 90%;
+    margin: 0 auto;
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
+}
+
+.chart {
+    width: 60%;
+    display: flex;
+    position: absolute;
+    right: 0;
+    /* height: 700px; */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .pie {
+    width: 30%;
+    /* height: 300px; */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }

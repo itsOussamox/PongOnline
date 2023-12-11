@@ -1,0 +1,44 @@
+.App
+  {
+    background: rgba(5, 10, 39, 1);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    z-index: auto; /* Lower the z-index value */
+  }
+  
+  .AppGlass
+  {
+    display: grid;
+    height: 90%;
+    width: 90%;
+    border-radius: 2rem;
+    background-color: var(--glass);
+    overflow: hidden;
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-template-columns: 2rem 25rem auto 40rem 2rem;
+    grid-template-rows: repeat(3, 1fr);
+    z-index: auto;
+  }
+  
+  @media (min-width: 1300px) and (max-width: 1900px) {
+    .AppGlass {
+      grid-template-columns: 2rem 25rem auto 22rem 2rem;
+    }
+  }
+  
+  @media screen and (max-width: 1300px) {
+    .AppGlass {
+      grid-template-columns: 2rem 22rem auto;
+    }
+    
+  }
+  
+  .AppGlass-header {
+    grid-row: 1;
+    grid-column: 1 / 4;
+    background-color: #07284f;
+  }

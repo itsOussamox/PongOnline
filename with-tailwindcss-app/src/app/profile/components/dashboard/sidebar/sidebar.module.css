@@ -1,0 +1,221 @@
+.profile-image {
+    height: 13.7vh;
+    width: 7.9vw;
+    margin: 30px 0; /* Adjust margin as needed */
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50% 50%;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items horizontally within the container */
+    height: fit-content;
+  }
+  
+  .Sidebar {
+    grid-row-start: 1;
+    grid-row-end: 4;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    padding-top: 4rem;
+    transition: all 300ms ease;
+  }
+
+  div span.username {
+    gap: 10px;
+    font-family: "Inter", sans-serif;
+    font-weight: 800;
+    font-size: 25px;
+    padding-top: 1rem;
+  }
+  
+  div span.user-id {
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    color: #a0c0a6;
+    padding-top: 1rem;
+  }
+
+  
+  .profile-header {
+    background: rgba(5, 10, 39, 0.55);
+    padding-top: 1.25rem; /* Adjust padding as needed */
+    padding-bottom: 0px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 33vh; /* Set height to 100% to extend from top to bottom */
+    width: 12vw;
+    box-sizing: border-box; /* Include padding in the total height */
+    margin: 0 auto; /* Center the .profile-header horizontally */
+    margin-top: 50px; /* Adjust margin as needed */
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
+  }
+  
+  .sidebar-container {
+    background: linear-gradient(169.75deg, rgba(255, 255, 255, 0) -50.22%, #040924 -9.3%, #111534 -1.17%, rgba(68, 71, 111, 0.957018) 83.26%, rgba(154, 155, 211, 0.9) 136.85%);
+    padding-bottom: 30vh;
+  }
+  
+  .wallet {
+    color: aliceblue;
+    position: relative;
+    top: 4vh;
+    left: 0vw;
+    margin: 30px;
+    gap: 0.5rem;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .wallet svg {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .wallet span {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* .settings-container
+{
+    position: relative;
+    top: 4vh;
+    left: 0vw;
+    margin: 30px;
+    gap: 0.5rem;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+} */
+
+@media (min-width: 1300px) and (max-width: 1900px) {
+  .Sidebar {
+    grid-row-start: 1;
+    grid-row-end: 3;
+  }
+
+  .profile-header {
+    width: 60%;
+    margin-top: 30px;
+    padding-bottom: 8.215rem;
+  }
+
+  .wallet {
+    bottom: 20rem ;
+  }
+
+  .profile-image {
+    height: 160px;
+    width: 160px;
+    margin: 20px 0;
+  }
+
+  div span.username {
+    font-size: 20px;
+    padding-top: 0.5rem;
+  }
+
+  div span.user-id {
+    font-size: 14px;
+    padding-top: 0.5rem;
+  }
+
+  .settings {
+    bottom: 200px;
+  }
+
+  .settings span {
+    font-size: 14px;
+    margin-left: 8px;
+  }
+
+  .settings svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .sidebar-container {
+    padding-bottom: 480px;
+  }
+
+  .wallet svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .wallet span {
+    font-size: 16px;
+  }
+}
+
+/* Small screen size: max-width 767px */
+@media (max-width: 1300px) {
+  .Sidebar {
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+
+  .profile-header {
+    width: 50%;
+    margin-top: 45px;
+    padding-bottom: 6.215rem;
+  }
+
+  .wallet {
+    bottom: 240px;
+  }
+
+  .profile-image {
+    height: 120px;
+    width: 120px;
+    margin: 15px 0;
+  }
+
+  div span.username {
+    font-size: 20px;
+    padding-top: 0.3rem;
+  }
+
+  div span.user-id {
+    font-size: 13px;
+    padding-top: 0.3rem;
+  }
+
+  .settings {
+    bottom: 130px;
+  }
+
+  .settings span {
+    font-size: 12px;
+    margin-left: 6px;
+  }
+
+  .settings svg {
+    width: 25px;
+    height: 25px;
+  }
+
+  .sidebar-container {
+    padding-bottom: 400px;
+  }
+
+  .wallet svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .wallet span {
+    font-size: 14px;
+  }
+}
