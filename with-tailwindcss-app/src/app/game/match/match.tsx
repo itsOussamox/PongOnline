@@ -1,125 +1,94 @@
 "use client";
 import React, {useRef, useEffect} from "react";
 import './globals.css'
-import Matter, { Engine, Render, World, Bodies, Body, Composite, Runner } from "matter-js";
+import Matter, { Engine, Render, World, Bodies, Body, Composite, Bounds } from "matter-js";
 import { DefaultEventsMap } from "socket.io-client/build/typed-events";
 import Cookies from 'js-cookie';
-import CircularJSON from 'circular-json';
 import { Socket, io } from "socket.io-client";
+import { parse } from "path";
+import { type } from "os";
 
-interface MatchBodies {
-    barA: Matter.Body;
-    barB: Matter.Body;
-    ball: Matter.Body;
-    topWall: Matter.Body;
-    bottomWall: Matter.Body;
+
+interface Skin {
+    path: string;
+    width: number;
+    height: number;
 }
-var   gBodies : MatchBodies = {
-    barA: Bodies.rectangle(0, 0, 0, 0),
-    barB: Bodies.rectangle(0, 0, 0, 0),
-    ball: Bodies.circle(0, 0, 0),
-    topWall: Bodies.rectangle(0, 0, 0, 0),
-    bottomWall: Bodies.rectangle(0, 0, 0, 0),
+
+const HEIGHT : number = 800;
+const WIDTH : number = 1500;
+const PERCENTWIDTH = 100; // %
+const PERCENTHEIGHT = 70; // %
+const backgroundImg = '/GameAssets/Gbackground.png';
+const paddleImg = '/GameAssets/OPaddle.png';
+const paddleSkin : Skin = {
+    path: paddleImg,
+    width: 20,
+    height: 183, //px
 };
 
-const addBodies = (engine: Engine, gameDataPos: any, gameData: any) => {
-    // handle gbodies undefined
-    if (gBodies.barA === undefined || gBodies.barB === undefined || gBodies.ball === undefined ||
-        gBodies.topWall === undefined || gBodies.bottomWall === undefined)
-        {
-            console.log('gBodies undefined');
-            return;
-        }
-    gBodies.bottomWall = Bodies.rectangle(gameDataPos.bottomWall_data[0].x, gameDataPos.bottomWall_data[0].y,
-        gameData.canvasInfo[0], gameData.canvasInfo[2], { isStatic: true });
-    gBodies.topWall = Bodies.rectangle(gameDataPos.topWall_data[0].x, gameDataPos.topWall_data[0].y,
-        gameData.canvasInfo[0], gameData.canvasInfo[2], { isStatic: true });
-    gBodies.barA = Bodies.rectangle(gameDataPos.barA_data[0].x, gameDataPos.barA_data[0].y,
-        gameData.bodiesInfo[1], gameData.bodiesInfo[0], { isStatic: true });
-    gBodies.barB = Bodies.rectangle(gameDataPos.barB_data[0].x, gameDataPos.barB_data[0].y,
-        gameData.bodiesInfo[1], gameData.bodiesInfo[0], { isStatic: true }); 
-    gBodies.ball = Bodies.circle(gameDataPos.ball_data[0].x, gameDataPos.ball_data[0].y,
-        gameData.bodiesInfo[2], { isStatic: false });
-    World.add(engine.world, [gBodies.bottomWall, gBodies.topWall, gBodies.barA,
-         gBodies.barB, gBodies.ball]);
-    console.log('added bodies');
-};
 
-const updateBodies = (engine: Engine, gameDataPos: any) => {
-    Body.setPosition(gBodies.barA, gameDataPos.barA_data[0]);
-    Body.setPosition(gBodies.barB, gameDataPos.barB_data[0]);
-    Body.setPosition(gBodies.topWall, gameDataPos.topWall_data[0]);
-    Body.setPosition(gBodies.bottomWall, gameDataPos.bottomWall_data[0]);
-    Body.setPosition(gBodies.ball, gameDataPos.ball_data[0]);
-    Body.setVelocity(gBodies.ball, gameDataPos.ball_data[1]);
+const scaleToWindow  = (render: Render) => {
+    const scaleX = ((window.innerWidth * PERCENTWIDTH) / 100) / WIDTH;
+    const scaleY = ((window.innerHeight * PERCENTHEIGHT) / 100) / HEIGHT;
+    const scale = Math.min(scaleX, scaleY);
+    const scaledWidth = WIDTH * scale;
+    const scaledHeight = HEIGHT * scale;
+    render.canvas.width = scaledWidth;
+    render.canvas.height = scaledHeight;
+    render.canvas.style.backgroundImage = `url(${backgroundImg})`;
+    render.canvas.style.backgroundPosition = 'center';
+    render.canvas.style.backgroundSize = 'cover';
+    render.canvas.style.borderRadius = '10px';
+    render.canvas.style.width = scaledWidth + 'px';
+    render.canvas.style.height = scaledHeight + 'px';
+    render.canvas.style.margin = 'auto';
+    // render.canvas.style.top = '10%';
+    render.options.width = render.canvas.width;
+    render.options.height = render.canvas.height;
+    return scale;
 }
 
-const drawBodies = (bodies: Matter.Body[], ctx: CanvasRenderingContext2D) => {
-        ctx.clearRect(0, 0, 1000, 800);
-        ctx.fillStyle = "#3D6BBC";
-        ctx.strokeStyle = "#132545";
-        bodies.forEach((body) => {
-            var vertices = body.vertices;
-            ctx.beginPath();
-            vertices.forEach((vertex) => {ctx.lineTo(vertex.x, vertex.y);});
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
-        });
-
-}
-
-let lastUpdateTimestamp = 0;
-const updateInterval = 1000 / 120;
-let parsedBodies : Matter.Body[] = [];
-const handleGameLoop = (socketRef: Socket, gameData: object, engine: Engine, render: Render, gameDataPos : any) => {
+var parsedBodies : Matter.Body[] = [];
+const handleGameLoop = (socketRef: Socket, engine: Engine, render: Render) => {
     render = Render.create({
         element: document.getElementById('RenderMatch') as HTMLElement,
         engine: engine,
         options: {
-            width: 1000,
-            height: 800,    
-            wireframes: true,
+            wireframes: false,
             background: 'transparent',
         },
       });
-    socketRef.on('updateFrames', (bodies) => {
+      var i : number = 0;
+    socketRef.on('updateFrames', (bodies : any, playersScore : any) => {
         parsedBodies = JSON.parse(bodies).map((bodyJson: Matter.Body) => Body.create(bodyJson));
+        if (typeof window !== 'undefined')
+        {
+            Composite.clear(engine.world, false);
+            const scale = scaleToWindow(render);
+            Composite.add(engine.world, parsedBodies);
+            Composite.scale(engine.world, scale, scale, {x: 0 ,y: 0})
+            var i = 0;
+            engine.world.bodies.forEach((body: Matter.Body) => {
+            if ((i == 2 || i == 3) && body.render.sprite != undefined) {
+                body.render.sprite.texture = paddleSkin.path;
+                const bodyWidth = body.bounds.max.x - body.bounds.min.x;
+                const bodyHeight = body.bounds.max.y - body.bounds.min.y;
+                const scaleX = bodyWidth / paddleSkin.width;
+                const scaleY = bodyHeight / paddleSkin.height;
+                body.render.sprite.xScale = scaleX;
+                body.render.sprite.yScale = scaleY;
+                body.render.sprite.yOffset = 0.5 ;
+                body.render.sprite.xOffset = 0.5 ;
+              }
+              i++;
+            });
+            Render.world(render);
+            // update
+        }
     });
-
-    
-    //   var firstFrame : boolean = true;
-    // socketRef.on('updateFrame', (newData: object) => {
-    //     gameDataPos = newData;
-    //      console.log('FF = ', firstFrame);
-    //     if (firstFrame && gameDataPos.topWall_data !== undefined)
-    //     {
-    //         addBodies(engine, gameDataPos, gameData);
-    //         firstFrame = false;
-    //     }
-    //     if (gameDataPos)
-    //     {
-    //         updateBodies(engine, gameDataPos);
-    //         // Engine.update(engine, 1000 / 60);
-    //         Render.world(render); 
-    //     }
-
-    // });
-
-    const canvas = document.querySelector("#game");
-    // const ctx = (canvas as HTMLCanvasElement).getContext("2d");
-    const update = () => {
-        Composite.clear(engine.world, false);
-        World.add(engine.world, parsedBodies); // more optimised way
-        if (canvas !== null && canvas !== undefined)
-            render.canvas = canvas as HTMLCanvasElement;
-        // if (ctx !== undefined && ctx !== null)
-        //     drawBodies(engine.world.bodies, ctx);
-        Engine.update(engine, 1000/60);
-        Render.world(render);
-    };
-    setInterval(update, 1);
 };
+
 
 
 const MatchScene = () => {
@@ -137,7 +106,6 @@ const MatchScene = () => {
             if (matchID === null || authToken === undefined)
             {
                 alert('MatchID is null or authToken is undefined');
-                // console.log('MatchID is null or authToken is undefined');
                 window.location.href = '/';
             }
             if (socketRef.current === null)
@@ -147,16 +115,28 @@ const MatchScene = () => {
                 alert(reason); 
                 window.location.href = destination;
             });
-            socketRef.current.on('startFriendGame', (data : object) => {
+            socketRef.current.on('startFriendGame', (playersData : any) => {
                 engine.current.gravity.y = 0;
-                const gameData = data;
-                handleGameLoop(socketRef.current! ,gameData, engine.current, render.current!, gameDataPos);
+                // console.log(playersData);
+                var playerOneImage = document.getElementById('playerOneImage') as HTMLImageElement;
+                var playerTwoImage = document.getElementById('playerTwoImage') as HTMLImageElement;
+                playerOneImage.src = playersData[0].profilePic;
+                playerTwoImage.src = playersData[1].profilePic;
+                handleGameLoop(socketRef.current!, engine.current, render.current!);
             });
     }
     return (
-        <div id="MatchElem">
-            {/* <canvas className="game" id="game" width="1000" height="800"></canvas> */}
-            <div className="RenderMatch" id="RenderMatch"/>
+        // center the canvas
+        <div id="parentDiv" className="flex flex-col h-full w-full justify-center items-center gap-[5vh]">
+            <div id="TopBar" className="w-1/3 max-w-xs h-14 outline outline-2 bg-[#282C4E] rounded-b-lg"/>
+            <div id="RenderMatch" className="flex flex-col items-center"/>
+            <div id="scoreDisplay" className="flex flex-row space-x-2 gap-[1vw] bg-[#282C4E] h-16 ">
+                <img id="playerOneImage" className="max-w-[64px] min-w-[64px] bg-white w-16 h-16 mb-2" />
+                <div id="scoreOne" className="max-w-[64px] min-w-[64px] flex items-center justify-center text-lg font-bold w-16 h-16 text-white text-center">1</div>
+                <div className="splitter"></div>
+                <div id="scoreTwo" className="max-w-[64px] min-w-[64px] flex items-center justify-center text-lg font-bold w-16 h-16 text-white text-center">0</div>
+                <img id="playerTwoImage" className="max-w-[64px] min-w-[64px] w-16 h-16 bg-white mb-2" />
+            </div>
         </div>
     )
 };

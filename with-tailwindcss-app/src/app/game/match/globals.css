@@ -1,26 +1,20 @@
-body {
-    background: #050A27;
-  }
-#game {
-  /* center the canvas */
-  position: absolute;
-  top: 25%;
-  left: 25%;
-  display: block;
-  margin: auto;
-  width: 50%;
-  height: 50%;
-  border: 1px solid #333;
+body{
+  background: #050A27;
 }
 
-#MatchScene {
-  /* make it scale with the window */
+/* #TopBar{
+  width: 200px;
+  height: 10%;
+  background: #050A27;
+} */
+.splitter {
+  color: white; /* Color of the line */
+  align-self: center; /* Center the line vertically */
+  border-left: 1px solid white; /* Style of the line */
+  height: 80%; /* Adjust the height of the line */
+}
 
-  position: absolute;
-  top: 25%;
-  left: 25%;
-  display: inline-block;
-  margin: auto;
+#RenderMatch {
   width: 100%;
-  border: 1px solid #0b1b3f;
+  height: 70%;
 }

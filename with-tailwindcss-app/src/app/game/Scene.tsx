@@ -1,6 +1,6 @@
 "use client";
 import React, { FC, useEffect, useRef, useState } from 'react';
-import Matter, { Engine, Render, World, Bodies, Body } from "matter-js";
+import Matter, { Engine, Render, World, Bodies, Body, Composite } from "matter-js";
 import Cookies from 'js-cookie';
 import './globals.css'
 import { DefaultEventsMap } from "socket.io-client/build/typed-events";
@@ -11,6 +11,8 @@ import { Socket } from 'socket.io-client';
 const PaddleImg = '/GameAssets/OPaddle.png';
 const BallImg = '/GameAssets/newBall.png';
 const MdlImg = '/GameAssets/4kMDL.png';
+var parsedBodies: Matter.Body[] = [];
+
 interface SceneProps {}
 
 const Scene: FC<SceneProps> = () => {
@@ -98,7 +100,6 @@ const Scene: FC<SceneProps> = () => {
       return Bodies.circle(cPos.x, cPos.y, ballRadius, {
         restitution: 1,
         render: { 
-          // sprite: {texture:  BallImg, xScale: (ballRadius * 2) / 20, yScale: (ballRadius * 2) / 20},
           fillStyle: 'White' },
       });
     }
@@ -186,10 +187,9 @@ const Scene: FC<SceneProps> = () => {
                 fillStyle: 'White' },
             });
             Matter.World.add(engine.current.world, [middleBG ,barA, barB, topWall, bottomWall, ball]);
-            socketRef.current?.on('updateFrame', (newData : any) => {
-              setPlayersScore(newData.playersScore);
-              data.current = newData;
-            });
+            socketRef.current?.on('updateFrames', (bodies : string) => {
+              parsedBodies = JSON.parse(bodies).map((bodyJson: Matter.Body) => Body.create(bodyJson));
+          });
             render.current = Render.create({
               element: document.querySelector('#Scene') as HTMLElement,
               engine: engine.current,
@@ -203,41 +203,14 @@ const Scene: FC<SceneProps> = () => {
             const update = () => {
               render.current!.canvas.width = adjustWidth();
               render.current!.canvas.height = adjustHeight();
-              if (data.current) {
-                  Matter.World.remove(engine.current.world, [topWall, bottomWall, middleBG, ball, barA, barB]);
-                  barA = getconvertedPaddle('1', getconvertedPos(data.current.barA_data[0]));
-                  barB = getconvertedPaddle('2', getconvertedPos(data.current.barB_data[0]));
-                  middleBG = Bodies.rectangle(render.current!.canvas.width / 2, render.current!.canvas.height / 2,
-                  render.current!.canvas.width, render.current!.canvas.height, {
-                    isStatic: true,
-                    collisionFilter: {
-                      category: 0x0002,
-                      mask: 0x0002,
-                    },
-                    render: { 
-                      sprite: {texture:  "/GameAssets/Gbackground.png", xScale: render.current!.canvas.width / 800  , yScale: render.current!.canvas.height / 800},
-                      fillStyle: 'black'},
-                    });
-                    topWall = Bodies.rectangle(convertedWidth / 2, wallHeight / 2, convertedWidth, wallHeight, {
-                      isStatic: true,
-                      render: { opacity: 0,
-                        fillStyle: 'White' },
-                    });
-                    bottomWall = Bodies.rectangle(convertedWidth / 2, convertedHeight - wallHeight / 2, convertedWidth, wallHeight, {
-                    isStatic: true,
-                    render: { opacity: 0,
-                      fillStyle: 'White' },
-                    });
-                  ball = getconvertedBall(getconvertedPos(data.current.ball_data[0]));
-                  Matter.World.add(engine.current.world, [middleBG, topWall, bottomWall, barA, barB, ball]);
-                  Matter.Body.setPosition(ball, getconvertedPos(data.current.ball_data[0]));
-                  Matter.Body.setVelocity(ball, data.current.ball_data[1]);
-                }
-                Matter.Engine.update(engine.current);
-                Matter.Render.world(render.current!);
-                requestAnimationFrame(update);
+              Composite.clear(engine.current.world, false);
+              World.add(engine.current.world, parsedBodies);
+              
+              // Composite.scale(engine.current.world, 1 / adjustWidth(), 1 / adjustHeight(), {x: 0, y: 0});
+              Matter.Engine.update(engine.current);
+              Matter.Render.world(render.current!);
               };
-            requestAnimationFrame(update);
+            setInterval(update, 1000 / 61);
             document.addEventListener('keydown', pressHandle);
             document.addEventListener('keyup', releaseHandle);
             return () => {
