@@ -205,8 +205,6 @@ const Scene: FC<SceneProps> = () => {
               render.current!.canvas.height = adjustHeight();
               Composite.clear(engine.current.world, false);
               World.add(engine.current.world, parsedBodies);
-              
-              // Composite.scale(engine.current.world, 1 / adjustWidth(), 1 / adjustHeight(), {x: 0, y: 0});
               Matter.Engine.update(engine.current);
               Matter.Render.world(render.current!);
               };

@@ -6,7 +6,7 @@ import { Server, Socket } from 'socket.io';
 
 
 const HEIGHT : number = 800;
-const WIDTH : number = 1000;
+const WIDTH : number = 1500;
 const WALLHEIGHT : number = 1;
 const PADDLEWIDTH : number = 15;
 const PADDLEHEIGHT : number = 90;
@@ -22,6 +22,7 @@ export class GameInstance {
     private playerTwo: Player;
     private ball: Ball;
     public gameInfo: GameInfo;
+    private gameOver: boolean = false;
 
     constructor(playerOneSocket: Socket, playerTwoSocket: Socket, roomNumber: string, serverIO: Server) {
         this.engine = Engine.create();
@@ -29,14 +30,15 @@ export class GameInstance {
         this.canvas = {
             width: WIDTH,
             height: HEIGHT,
-            topWall: Bodies.rectangle(WIDTH / 2, 1 / 2, WIDTH, WALLHEIGHT, { isStatic: true, render: { fillStyle: 'White' } }),
-            bottomWall: Bodies.rectangle(WIDTH / 2, HEIGHT - 1 / 2, WIDTH, WALLHEIGHT, { isStatic: true, render: { fillStyle: 'White' } }),
+            topWall: Bodies.rectangle(WIDTH / 2, 1 / 2, WIDTH, WALLHEIGHT, { isStatic: true, render: { visible: false} }),
+            bottomWall: Bodies.rectangle(WIDTH / 2, HEIGHT - 1 / 2, WIDTH, WALLHEIGHT, { isStatic: true, render: { visible: true} }),
             wallHeight: WALLHEIGHT,
             backgroundSkin: "black",
         };
         this.playerOne = {
             paddle: {
-                bar: Bodies.rectangle(10, HEIGHT / 2, PADDLEWIDTH, PADDLEHEIGHT, { isStatic: true, render: { fillStyle: 'White' } }),
+                bar: Bodies.rectangle(10, HEIGHT / 2, PADDLEWIDTH, PADDLEHEIGHT, 
+                { isStatic: true, render: { fillStyle: 'White', sprite:{texture: '/GameAssets/OPaddle.png'}} }),
                 barHeight: 70,
                 barWidth: 15,
                 xPosition: 10,
@@ -50,7 +52,8 @@ export class GameInstance {
         };
         this.playerTwo = {
             paddle: {
-                bar: Bodies.rectangle(WIDTH - 10, HEIGHT / 2, PADDLEWIDTH, PADDLEHEIGHT, { isStatic: true, render: { fillStyle: 'White' } }),
+                bar: Bodies.rectangle(WIDTH - 10, HEIGHT / 2, PADDLEWIDTH, PADDLEHEIGHT,
+                { isStatic: true, render: { fillStyle: 'White', sprite:{texture: '/GameAssets/OPaddle.png'} } }),
                 barHeight: 70,
                 barWidth: 15,
                 xPosition: WIDTH - 10,
@@ -63,12 +66,14 @@ export class GameInstance {
             playerSocket: playerTwoSocket,
         };
         this.ball = {
-            ball: Bodies.circle(WIDTH / 2, HEIGHT / 2, BALLRADIUS, { restitution: 1, render: { fillStyle: 'Yellow' } }),
+            ball: Bodies.circle(WIDTH / 2, HEIGHT / 2, BALLRADIUS, { restitution: 1,
+                render: { fillStyle: 'white',
+                        sprite: {texture : '/GameAssets/newBall.png'}} }),
             ballVelocity: Vector.create(0, 0),
             ballSkin: 'null',
-            ballSpeed: 6,
+            ballSpeed: 16,
             ballAngle: 0,
-            maxSpin: 5,
+            maxSpin: 4,
         };
         this.gameInfo = {
             frameRate: 1000 / 75,
@@ -76,9 +81,9 @@ export class GameInstance {
             gameRoom: roomNumber,
             IOserver: serverIO,
             roundStart: false,
-            paddleSpeed: 3,
+            paddleSpeed: 5,
+            winScore: 1,
         };
-        // this.runner = Matter.Runner.create();
         playerOneSocket.join(roomNumber);
         playerTwoSocket.join(roomNumber);
         
@@ -111,6 +116,7 @@ export class GameInstance {
           }
         });
     }
+
     addSpectator = (socket: Socket) => {
         
         socket.join(this.gameInfo.gameRoom);
@@ -125,6 +131,8 @@ export class GameInstance {
         console.log('spectator added')
     }
     gameLoop = () => {
+        if (this.gameOver == true)
+            return;
         if (this.gameInfo.roundStart == false) {
             this.gameInfo.roundStart = true;
             Body.setPosition(this.ball.ball, { x: WIDTH / 2, y: HEIGHT / 2 });
@@ -158,12 +166,11 @@ export class GameInstance {
                 this.ball.ballVelocity.y = 0;
             }, 3000);
         }
-        // handle the case where the ball keeps colliding with a single wall vertically and slows down
         if (this.gameInfo.roundStart &&(this.ball.ball.velocity.x < 0 && this.ball.ball.velocity.x > -0.5))
             this.ball.ballVelocity.x = -5;
         if (this.gameInfo.roundStart && (this.ball.ball.velocity.x > 0 && this.ball.ball.velocity.x < 0.5))
             this.ball.ballVelocity.x = 5;
-        if (this.playerOne.score == 5 || this.playerTwo.score == 5)
+        if (this.playerOne.score == this.gameInfo.winScore || this.playerTwo.score == this.gameInfo.winScore)
             this.endGame();
         if (this.wallWalk(this.playerOne) == false)
             Body.setPosition(this.playerOne.paddle.bar,
@@ -182,40 +189,36 @@ export class GameInstance {
     }
 
     endGame = () => {
+        this.gameOver = true;
+        const winner = (this.playerOne.score == this.gameInfo.winScore) 
+        ? this.playerOne : this.playerTwo;
         this.gameInfo.IOserver.to(this.gameInfo.gameRoom).emit('endGame', {
-            playersScore: [this.playerOne.score, this.playerTwo.score],
-            barA_data: [this.playerOne.paddle.bar.position, this.playerOne.paddle.bar.velocity],
-            barB_data: [this.playerTwo.paddle.bar.position, this.playerTwo.paddle.bar.velocity],
-            topWall_data: [this.canvas.topWall.position, this.canvas.topWall.velocity],
-            bottomWall_data: [this.canvas.bottomWall.position, this.canvas.bottomWall.velocity],
-            ball_data: [this.ball.ball.position, this.ball.ball.velocity, this.ball.ball.angle]
+            winner: (this.playerOne.score == this.gameInfo.winScore) ? '1' : '2',
         });
-    
+        setTimeout(() => {
+            Events.off(this.engine, 'collisionStart', this.collisionDetect);
+            Events.off(this.runner, "beforeTick", this.animationFrame);
+            Runner.stop(this.runner);
+            World.clear(this.engine.world, false);
+            Engine.clear(this.engine);
+        }, 10000);
+        
     }
     sendFrame = () => {
         const worldState = JSON.stringify(Composite.allBodies(this.engine.world), (key, value) =>
         (key === 'parent' || key === 'parts' || key === 'body') ? undefined : value);
-        // stringify the engine and send it
-        this.gameInfo.IOserver.to(this.gameInfo.gameRoom).emit('updateFrames', worldState);
+        this.gameInfo.IOserver.to(this.gameInfo.gameRoom).emit('updateFrames', worldState,
+            [this.playerOne.score, this.playerTwo.score],
+        );
     }
     animationFrame = () => {
         this.gameLoop();
-        // this.gameInfo.IOserver.to(this.gameInfo.gameRoom).emit('updateFrame', {
-        //     playersCounter: this.gameInfo.playersCounter,
-        //     playersScore: [this.playerOne.score, this.playerTwo.score],
-        //     barA_data: [this.playerOne.paddle.bar.position, this.playerOne.paddle.bar.velocity],
-        //     barB_data: [this.playerTwo.paddle.bar.position, this.playerTwo.paddle.bar.velocity],
-        //     topWall_data: [this.canvas.topWall.position, this.canvas.topWall.velocity],
-        //     bottomWall_data: [this.canvas.bottomWall.position, this.canvas.bottomWall.velocity],
-        //     ball_data: [this.ball.ball.position, this.ball.ball.velocity, this.ball.ball.angle]
-        // });
-        }
+        this.sendFrame();
+    }
     startFriendGame = () => {
-        this.gameInfo.IOserver.to(this.gameInfo.gameRoom).emit('startFriendGame', {
-            canvasInfo: [this.canvas.width, this.canvas.height, this.canvas.wallHeight],
-            bodiesInfo: [this.playerOne.paddle.barHeight, this.playerOne.paddle.barWidth,
-                        BALLRADIUS,]
-        });
+        console.log(this.playerOne.playerData)
+        this.gameInfo.IOserver.to(this.gameInfo.gameRoom).emit('startFriendGame',
+            [this.playerOne.playerData, this.playerTwo.playerData]);
         this.playerOne.playerSocket.on('onMove', (movement : number) => {
             this.playerOne.paddle.move = movement;
         });
@@ -224,13 +227,14 @@ export class GameInstance {
         });
         World.add(this.engine.world, [this.canvas.topWall, this.canvas.bottomWall, this.playerOne.paddle.bar,
              this.playerTwo.paddle.bar, this.ball.ball]);
+        this.runner = Runner.create();
+        this.runner.delta = 1000 / 75;
+        this.runner.isFixed = false;
+        Runner.run(this.runner, this.engine);
         Events.on(this.engine, 'collisionStart', this.collisionDetect);
-        console.log('A Friend Game just started');
-        Runner.run(this.engine)
-        setInterval(this.sendFrame, 1000/60);
-        setInterval(this.animationFrame , 1000/60);
+        Events.on(this.runner, "beforeTick", this.animationFrame);
     }
-
+    
     startGame = () => {
         this.gameInfo.IOserver.to(this.gameInfo.gameRoom).emit('startGame', {
             playersScore: [this.playerOne.score, this.playerTwo.score],
@@ -247,8 +251,12 @@ export class GameInstance {
             this.playerTwo.paddle.move = movement;
         });
         World.add(this.engine.world, [this.canvas.topWall, this.canvas.bottomWall, this.playerOne.paddle.bar,
-             this.playerTwo.paddle.bar, this.ball.ball]);
+            this.playerTwo.paddle.bar, this.ball.ball]);
+        this.runner = Runner.create();
+        this.runner.delta = 1000 / 75;
+        this.runner.isFixed = true;
+        Runner.run(this.runner, this.engine);
+        Events.on(this.runner, "beforeTick", this.animationFrame);
         Events.on(this.engine, 'collisionStart', this.collisionDetect);
-        setInterval(this.animationFrame , 1000/120);
     }
 }

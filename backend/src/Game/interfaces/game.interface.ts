@@ -45,6 +45,7 @@ interface GameInfo {
     IOserver: Server;
     roundStart: boolean;
     paddleSpeed: number;
+    winScore: number;
 }
 
 export { Canvas, Paddle, Player, Ball, GameInfo };
