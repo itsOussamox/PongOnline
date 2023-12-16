@@ -26,7 +26,7 @@ interface Player {
     paddle: Paddle;
     score: number;
     playerData: User;
-    playerSocket: Socket;
+    playerSocket: Array<Socket>;
 }
 
 interface Ball {
@@ -48,4 +48,9 @@ interface GameInfo {
     winScore: number;
 }
 
-export { Canvas, Paddle, Player, Ball, GameInfo };
+interface EndGameState {
+    reason: string;
+    winner: Player;
+}
+
+export { Canvas, Paddle, Player, Ball, GameInfo, EndGameState };

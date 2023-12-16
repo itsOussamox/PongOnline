@@ -24,22 +24,29 @@ export class GameGateway implements  OnGatewayConnection, OnGatewayDisconnect{
         });
         const user = await this.authGoogleService.findUserByEmail(payload.email);
         client["user"] = user as User;
-        console.log("INFORMATIONS RECEIVED FROM = " , user.username);
+        this.gameService.clearFinishedGames();
+        const inGame = this.gameService.inGameCheck(client);
+        if (inGame)
+          return ;
+        const matchID = client.handshake.auth.matchID;
+        if (matchID)
+          this.gameService.GameEvent(this.server, client,matchID);
+        else
+        {
+          client.emit('redirect', '/', 'You are not allowed to join this room');
+          client.disconnect(true);
+          return ;
+        }
       }
       catch (error) {
-        console.log("This client has no token: " , client.id);
         client.emit('redirect', '/', 'You are not logged in');
         client.disconnect(true);
         return ;
       }
-      const matchID = client.handshake.auth.matchID;
-      if (matchID)
-        this.gameService.friendGameEvent(this.server,client,matchID);
-      else
-        this.gameService.startGameEvent(this.server,client);
   }
   handleDisconnect(client: Socket) {
-    console.log("user disconnected: ", client.id);
+    if (client['user'] != undefined)
+      this.gameService.stopGameEvent(client)
+    console.log("user disconnected: ", (client['user'] ? client['user'].username : client.id));
   }
 }
-
